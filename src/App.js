@@ -1,29 +1,32 @@
 import {useState, useCallback} from 'react';
 import Setup from './components/Setup'
 import Dicelist from './components/Dicelist';
+import Dicerow from './components/Dicerow';
 import './App.css';
 
 function App() {
-  const [dices, setDices] = useState([]);
-  const [dicerolls, setDicerolls] = useState([[3,5,6], [2, 2, 1], [3, 3, 6, 6]]);
+  const [dice, setDice] = useState([]);
+  const [dicerolls, setDicerolls] = useState([]);
 
   const addDice = useCallback((sides) => {
-    setDices([...dices, sides]);
-  }, [dices]);
+    setDice([...dice, sides]);
+  }, [dice]);
 
-  const clearAllDices = () => setDices([]);
+  const clearAllDice = () => setDice([]);
 
+  const rollDice = ()=>{
+    let newdr = JSON.parse(JSON.stringify(dicerolls));
+    newdr.push(dice.map((v) => Math.floor((Math.random() * v) + 1)))
+    setDicerolls(newdr);
+  }
 
   return (
-    <div className="App">{console.log(dices)}
-      <Setup clearAll={clearAllDices} addDice={addDice} />
+    <div className="App">{console.log(dice)}
+      <Setup clearAll={clearAllDice} addDice={addDice} />
+      <p><Dicerow dicerow={dice} /></p>
       <hr />
+      <button onClick={rollDice}>Roll</button>
       <Dicelist dicerolls={dicerolls} />
-      <button onClick={()=>{
-        let newdr = JSON.parse(JSON.stringify(dicerolls));
-        newdr.push(dices)
-        setDicerolls(newdr);
-      }}>Roll</button>
     </div>
   );
 }
