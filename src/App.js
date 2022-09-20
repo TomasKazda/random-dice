@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+import {useState, useCallback} from 'react';
+import Setup from './components/Setup'
+import Dicelist from './components/Dicelist';
 import './App.css';
 
 function App() {
+  const [dices, setDices] = useState([]);
+  const [dicerolls, setDicerolls] = useState([[3,5,6], [2, 2, 1], [3, 3, 6, 6]]);
+
+  const addDice = useCallback((sides) => {
+    setDices([...dices, sides]);
+  }, [dices]);
+
+  const clearAllDices = () => setDices([]);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App">{console.log(dices)}
+      <Setup clearAll={clearAllDices} addDice={addDice} />
+      <hr />
+      <Dicelist dicerolls={dicerolls} />
+      <button onClick={()=>{
+        let newdr = JSON.parse(JSON.stringify(dicerolls));
+        newdr.push(dices)
+        setDicerolls(newdr);
+      }}>Roll</button>
     </div>
   );
 }
